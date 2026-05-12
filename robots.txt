@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://timfounder.github.io/nightrun/sitemap.xml

@@ -4,24 +4,29 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#050505" />
-<title>YURGO — Night Running Tashkent · Беги когда город спит</title>
+<title>YURGO — Night Running Tashkent</title>
 <meta name="description" content="Yurgo — закрытое night-running комьюнити Ташкента. Забеги каждую среду и субботу. 10 000 сум с каждой регистрации идут на благотворительность." />
+<link rel="canonical" href="./" />
+
+<!-- Icons -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="apple-touch-icon" href="apple-touch-icon.svg" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="YURGO — Night Running Tashkent" />
 <meta property="og:description" content="Беги по ночному Ташкенту вместе с комьюнити. Каждый забег — поддержка благотворительности." />
-<meta property="og:url" content="https://yurgo.uz" />
-<meta property="og:image" content="https://yurgo.uz/og.jpg" />
+<meta property="og:image" content="og.jpg" />
 <meta property="og:locale" content="ru_RU" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="YURGO — Night Running Tashkent" />
 <meta name="twitter:description" content="Закрытое night-running комьюнити Ташкента" />
+<meta name="twitter:image" content="og.jpg" />
 
 <!-- PWA -->
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22YURGO%22%2C%22short_name%22%3A%22YURGO%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23050505%22%2C%22theme_color%22%3A%22%23050505%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2522http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%2522%2520viewBox%253D%25220%25200%2520512%2520512%2522%253E%253Crect%2520width%253D%2522512%2522%2520height%253D%2522512%2522%2520fill%253D%2522%2523050505%2522%252F%253E%253Ccircle%2520cx%253D%2522256%2522%2520cy%253D%2522256%2522%2520r%253D%2522120%2522%2520fill%253D%2522%2523d4ff00%2522%252F%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" />
+<link rel="manifest" href="manifest.webmanifest" />
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -31,13 +36,20 @@
   "name": "Yurgo Night Running",
   "description": "Night-running комьюнити Ташкента",
   "address": {"@type":"PostalAddress","addressLocality":"Ташкент","addressCountry":"UZ"},
-  "url": "https://yurgo.uz"
+  "geo": {"@type":"GeoCoordinates","latitude":41.3111,"longitude":69.2797},
+  "openingHoursSpecification": [
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Wednesday","opens":"21:00","closes":"23:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"21:00","closes":"23:00"}
+  ],
+  "sport": "Running"
 }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" /></noscript>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -86,14 +98,14 @@
       <a href="#gallery" data-i18n="nav.gallery">Галерея</a>
       <a href="#faq" data-i18n="nav.faq">FAQ</a>
     </div>
-    <div class="lang-switch">
-      <button data-lang="ru" class="active">RU</button>
-      <button data-lang="uz">UZ</button>
-      <button data-lang="en">EN</button>
+    <div class="lang-switch" role="group" aria-label="Язык / Language">
+      <button data-lang="ru" class="active" aria-pressed="true" aria-label="Русский">RU</button>
+      <button data-lang="uz" aria-pressed="false" aria-label="Oʻzbekcha">UZ</button>
+      <button data-lang="en" aria-pressed="false" aria-label="English">EN</button>
     </div>
   </div>
   <a href="#register" class="nav-cta" data-i18n="nav.cta">Записаться</a>
-  <button class="burger" id="burger" aria-label="Меню">
+  <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mobileDrawer">
     <span></span><span></span><span></span>
   </button>
 </nav>

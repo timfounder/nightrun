@@ -1,3 +1,20 @@
+// =========== HELPERS ===========
+const safeStorage = {
+  get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} }
+};
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+const isTouchDevice = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
+const isFinePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+// =========== SCHEDULE ===========
+// Edit here to change run schedule without touching the rest of the code.
+// dayOfWeek: 0=Sun..6=Sat. hour/minute in Tashkent time (UTC+5).
+const RUN_SCHEDULE = [
+  { dayOfWeek: 3, hour: 21, minute: 0 }, // Wednesday 21:00
+  { dayOfWeek: 6, hour: 21, minute: 0 }  // Saturday 21:00
+];
+
 // =========== I18N ===========
 const translations = {
   ru: {
@@ -12,7 +29,7 @@ const translations = {
     'inc.title':'Что ты получаешь','inc.desc':'Регистрация — это не просто билет на пробежку. Это поддержка комьюнити, забота о тебе на дистанции и реальная помощь тем, кому она нужна.',
     'inc.1.title':'Комплимент от Yurgo','inc.1.desc':'Приятный подарок от организаторов каждому участнику забега — мерч, аксессуар или сюрприз вечера.','inc.1.tag':'Включено',
     'inc.2.title':'Вода 0.5 л','inc.2.desc':'Бутылка чистой воды 0.5 л на финише, чтобы восстановиться сразу после дистанции.','inc.2.tag':'Финиш-зона',
-    'inc.3.title':'10 000 сум — благотворительность','inc.3.desc':'Из каждой регистрации <strong style="color:var(--ink);">10 000 сум</strong> уходит в благотворительный фонд. Отчёты публикуем в Telegram.',
+    'inc.3.title':'10 000 сум — благотворительность','inc.3.desc':'Из каждой регистрации <strong class="i18n-accent">10 000 сум</strong> уходит в благотворительный фонд. Отчёты публикуем в Telegram.',
   },
   uz: {
     'nav.about':'Nimalar kiradi','nav.map':'Marshrutlar','nav.rating':'Reyting','nav.gallery':'Galereya','nav.faq':'FAQ','nav.cta':"Ro'yxatdan o'tish",
@@ -26,7 +43,7 @@ const translations = {
     'inc.title':'Siz nima olasiz','inc.desc':"Ro'yxatdan o'tish — bu shunchaki chipta emas. Bu jamoa qo'llab-quvvatlash, masofada g'amxo'rlik va haqiqiy yordamdir.",
     'inc.1.title':"Yurgo'dan sovg'a",'inc.1.desc':"Har bir ishtirokchiga tashkilotchilardan yoqimli sovg'a — merch, aksessuar yoki kechki syurpriz.",'inc.1.tag':'Kiritilgan',
     'inc.2.title':'0.5 l suv','inc.2.desc':"Marradan keyin tiklanish uchun 0.5 l toza suv shishasi.",'inc.2.tag':'Marra zonasi',
-    'inc.3.title':"10 000 so'm — xayriya",'inc.3.desc':"Har bir ro'yxatdan <strong style=\"color:var(--ink);\">10 000 so'm</strong> xayriya jamg'armasiga o'tadi. Hisobotlar Telegram'da.",
+    'inc.3.title':"10 000 so'm — xayriya",'inc.3.desc':"Har bir ro'yxatdan <strong class=\"i18n-accent\">10 000 so'm</strong> xayriya jamg'armasiga o'tadi. Hisobotlar Telegram'da.",
   },
   en: {
     'nav.about':"What's inside",'nav.map':'Routes','nav.rating':'Leaderboard','nav.gallery':'Gallery','nav.faq':'FAQ','nav.cta':'Sign up',
@@ -40,7 +57,7 @@ const translations = {
     'inc.title':'What you get','inc.desc':"Registration is more than a ticket. It's community support, on-route care, and real help for those who need it.",
     'inc.1.title':'Gift from Yurgo','inc.1.desc':'A pleasant present from organizers for every participant — merch, accessory, or surprise of the evening.','inc.1.tag':'Included',
     'inc.2.title':'0.5L water','inc.2.desc':'A 0.5L bottle of clean water at the finish so you can recover right after the distance.','inc.2.tag':'Finish zone',
-    'inc.3.title':'10 000 UZS — charity','inc.3.desc':'From every entry <strong style="color:var(--ink);">10 000 UZS</strong> goes to a charity fund. Reports published on Telegram.',
+    'inc.3.title':'10 000 UZS — charity','inc.3.desc':'From every entry <strong class="i18n-accent">10 000 UZS</strong> goes to a charity fund. Reports published on Telegram.',
   }
 };
 
@@ -49,34 +66,38 @@ function setLang(lang){
     const k=el.dataset.i18n;
     if(translations[lang]&&translations[lang][k])el.innerHTML=translations[lang][k];
   });
-  document.querySelectorAll('.lang-switch button').forEach(b=>{
-    b.classList.toggle('active',b.dataset.lang===lang);
+  document.querySelectorAll('.lang-switch button, .drawer-lang button').forEach(b=>{
+    const active=b.dataset.lang===lang;
+    b.classList.toggle('active',active);
+    b.setAttribute('aria-pressed', active ? 'true' : 'false');
   });
   document.documentElement.lang=lang;
-  try{localStorage.setItem('yurgo_lang',lang);}catch(e){}
+  safeStorage.set('yurgo_lang',lang);
 }
 document.querySelectorAll('.lang-switch button').forEach(b=>{
   b.addEventListener('click',()=>setLang(b.dataset.lang));
 });
-try{const saved=localStorage.getItem('yurgo_lang');if(saved)setLang(saved);}catch(e){}
+const savedLang = safeStorage.get('yurgo_lang');
+if(savedLang) setLang(savedLang);
 
 // =========== COUNTDOWN ===========
-// Next Wednesday 21:00 Tashkent (UTC+5)
+// Picks the next slot from RUN_SCHEDULE (Tashkent time, UTC+5).
 function nextRunDate(){
   const now=new Date();
-  const target=new Date(now);
-  const dow=now.getUTCDay();
-  // Wed=3
-  let daysAhead=(3-dow+7)%7;
-  if(daysAhead===0){
-    // Today is Wednesday — check time
-    const hoursTashkent=(now.getUTCHours()+5)%24;
-    if(hoursTashkent>=21)daysAhead=7;
-  }
-  target.setUTCDate(now.getUTCDate()+daysAhead);
-  // 21:00 Tashkent = 16:00 UTC
-  target.setUTCHours(16,0,0,0);
-  return target;
+  const candidates=RUN_SCHEDULE.map(s=>{
+    const target=new Date(now);
+    const dow=now.getUTCDay();
+    let daysAhead=(s.dayOfWeek-dow+7)%7;
+    if(daysAhead===0){
+      const tashkentMin=((now.getUTCHours()+5)%24)*60+now.getUTCMinutes();
+      if(tashkentMin>=s.hour*60+s.minute) daysAhead=7;
+    }
+    target.setUTCDate(now.getUTCDate()+daysAhead);
+    // Tashkent = UTC+5, so subtract 5h to land on UTC
+    target.setUTCHours(s.hour-5, s.minute, 0, 0);
+    return target;
+  });
+  return candidates.reduce((a,b)=>a<b?a:b);
 }
 const targetDate=nextRunDate();
 function pad(n){return String(n).padStart(2,'0');}
@@ -197,12 +218,14 @@ function openDrawer(){
   drawer.classList.add('open');
   drawerBackdrop.classList.add('open');
   burger.classList.add('open');
+  burger.setAttribute('aria-expanded','true');
   document.body.style.overflow='hidden';
 }
 function closeDrawer(){
   drawer.classList.remove('open');
   drawerBackdrop.classList.remove('open');
   burger.classList.remove('open');
+  burger.setAttribute('aria-expanded','false');
   document.body.style.overflow='';
 }
 if(burger){
@@ -244,17 +267,22 @@ if(mobileCta){
 // =========== HERO PARALLAX (subtle on scroll) ===========
 const heroVisual=document.querySelector('.hero-visual');
 const heroLeft=document.querySelector('.hero-left');
-if(heroVisual && window.innerWidth>640){
+if(heroVisual && window.innerWidth>640 && !prefersReducedMotion){
+  let parallaxFrame=0;
   window.addEventListener('scroll',()=>{
-    const y=window.scrollY;
-    if(y<window.innerHeight){
-      const opacity=Math.max(0,1-y/500);
-      if(heroLeft){
-        heroLeft.style.transform=`translateY(${y*0.15}px)`;
-        heroLeft.style.opacity=opacity;
+    if(parallaxFrame) return;
+    parallaxFrame=requestAnimationFrame(()=>{
+      parallaxFrame=0;
+      const y=window.scrollY;
+      if(y<window.innerHeight){
+        const opacity=Math.max(0,1-y/500);
+        if(heroLeft){
+          heroLeft.style.transform=`translateY(${y*0.15}px)`;
+          heroLeft.style.opacity=opacity;
+        }
+        heroVisual.style.transform=`translateY(${y*0.08}px)`;
       }
-      heroVisual.style.transform=`translateY(${y*0.08}px)`;
-    }
+    });
   },{passive:true});
 }
 
@@ -274,48 +302,58 @@ document.querySelectorAll('.faq-item').forEach(b=>{
 });
 
 // =========== PRELOADER ===========
-window.addEventListener('load',()=>{
-  setTimeout(()=>{
-    const pre=document.getElementById('preloader');
-    if(pre){
-      pre.classList.add('done');
-      setTimeout(()=>pre.remove(),900);
-    }
-  },1400);
-});
+(function preloaderInit(){
+  const pre=document.getElementById('preloader');
+  if(!pre) return;
+  let dismissed=false;
+  function dismiss(){
+    if(dismissed) return;
+    dismissed=true;
+    pre.classList.add('done');
+    setTimeout(()=>pre.remove(),700);
+  }
+  // Hard cap so users never get stuck on a slow asset
+  setTimeout(dismiss, prefersReducedMotion ? 200 : 1500);
+  if(document.readyState==='complete'){
+    setTimeout(dismiss, prefersReducedMotion ? 0 : 600);
+  }else{
+    window.addEventListener('load',()=>setTimeout(dismiss, prefersReducedMotion ? 0 : 600),{once:true});
+  }
+})();
 
 // =========== CUSTOM CURSOR ===========
 const cursorDot=document.getElementById('cursorDot');
 const cursorRing=document.getElementById('cursorRing');
 const ambientGlow=document.getElementById('ambientGlow');
-let mouseX=window.innerWidth/2,mouseY=window.innerHeight/2;
-let ringX=mouseX,ringY=mouseY;
 
-const isTouchDevice=('ontouchstart' in window)||navigator.maxTouchPoints>0;
-if(isTouchDevice){
-  if(cursorDot)cursorDot.style.display='none';
-  if(cursorRing)cursorRing.style.display='none';
+if(isTouchDevice || !isFinePointer || prefersReducedMotion){
+  if(cursorDot) cursorDot.style.display='none';
+  if(cursorRing) cursorRing.style.display='none';
+  if(ambientGlow) ambientGlow.style.display='none';
 }else{
+  let mouseX=window.innerWidth/2,mouseY=window.innerHeight/2;
+  let ringX=mouseX,ringY=mouseY;
+  let pendingMove=false;
   document.addEventListener('mousemove',e=>{
-    mouseX=e.clientX;mouseY=e.clientY;
-    cursorDot.style.left=mouseX+'px';
-    cursorDot.style.top=mouseY+'px';
-    if(ambientGlow){
-      ambientGlow.style.left=mouseX+'px';
-      ambientGlow.style.top=mouseY+'px';
-    }
-  });
-  // Smooth ring trailing
+    mouseX=e.clientX; mouseY=e.clientY;
+    if(pendingMove) return;
+    pendingMove=true;
+    requestAnimationFrame(()=>{
+      pendingMove=false;
+      cursorDot.style.transform=`translate(${mouseX}px, ${mouseY}px) translate(-50%,-50%)`;
+      if(ambientGlow){
+        ambientGlow.style.transform=`translate(${mouseX}px, ${mouseY}px) translate(-50%,-50%)`;
+      }
+    });
+  },{passive:true});
   function trailLoop(){
     ringX+=(mouseX-ringX)*0.18;
     ringY+=(mouseY-ringY)*0.18;
-    cursorRing.style.left=ringX+'px';
-    cursorRing.style.top=ringY+'px';
+    cursorRing.style.transform=`translate(${ringX}px, ${ringY}px) translate(-50%,-50%)`;
     requestAnimationFrame(trailLoop);
   }
   requestAnimationFrame(trailLoop);
 
-  // Hover detection for interactive elements
   const hoverSel='a,button,[role="button"],input,textarea,select,.faq-item,.podium-spot,.lb-row,.route-item,.gallery-item,.map-pin,.lang-switch button,label,.cd-box,.testi-card,.include-card';
   document.querySelectorAll(hoverSel).forEach(el=>{
     el.addEventListener('mouseenter',()=>document.body.classList.add('cursor-hover'));
@@ -458,20 +496,26 @@ const firstCharityStat=document.querySelector('.charity-stat-num');
 if(firstCharityStat)charityObserver.observe(firstCharityStat);
 
 // =========== MAGNETIC BUTTONS ===========
-const magneticSel=['.btn-primary','.btn-huge','.nav-cta'];
-document.querySelectorAll(magneticSel.join(',')).forEach(btn=>{
-  btn.classList.add('magnetic');
-  btn.addEventListener('mousemove',e=>{
-    const rect=btn.getBoundingClientRect();
-    const x=e.clientX-rect.left-rect.width/2;
-    const y=e.clientY-rect.top-rect.height/2;
-    const strength=0.25;
-    btn.style.transform=`translate(${x*strength}px, ${y*strength}px)`;
+if(isFinePointer && !prefersReducedMotion){
+  const magneticSel=['.btn-primary','.btn-huge','.nav-cta'];
+  document.querySelectorAll(magneticSel.join(',')).forEach(btn=>{
+    btn.classList.add('magnetic');
+    let frame=0;
+    btn.addEventListener('mousemove',e=>{
+      if(frame) return;
+      const rect=btn.getBoundingClientRect();
+      const x=e.clientX-rect.left-rect.width/2;
+      const y=e.clientY-rect.top-rect.height/2;
+      frame=requestAnimationFrame(()=>{
+        frame=0;
+        btn.style.transform=`translate(${x*0.25}px, ${y*0.25}px)`;
+      });
+    });
+    btn.addEventListener('mouseleave',()=>{
+      btn.style.transform='translate(0,0)';
+    });
   });
-  btn.addEventListener('mouseleave',()=>{
-    btn.style.transform='translate(0,0)';
-  });
-});
+}
 
 // =========== FAQ ===========
 document.querySelectorAll('.faq-item').forEach(item=>{
