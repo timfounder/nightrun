@@ -1,0 +1,963 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<meta name="theme-color" content="#050505" />
+<title>YURGO — Night Running Tashkent · Беги когда город спит</title>
+<meta name="description" content="Yurgo — закрытое night-running комьюнити Ташкента. Забеги каждую среду и субботу. 10 000 сум с каждой регистрации идут на благотворительность." />
+
+<!-- Open Graph -->
+<meta property="og:type" content="website" />
+<meta property="og:title" content="YURGO — Night Running Tashkent" />
+<meta property="og:description" content="Беги по ночному Ташкенту вместе с комьюнити. Каждый забег — поддержка благотворительности." />
+<meta property="og:url" content="https://yurgo.uz" />
+<meta property="og:image" content="https://yurgo.uz/og.jpg" />
+<meta property="og:locale" content="ru_RU" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="YURGO — Night Running Tashkent" />
+<meta name="twitter:description" content="Закрытое night-running комьюнити Ташкента" />
+
+<!-- PWA -->
+<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22YURGO%22%2C%22short_name%22%3A%22YURGO%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23050505%22%2C%22theme_color%22%3A%22%23050505%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2522http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%2522%2520viewBox%253D%25220%25200%2520512%2520512%2522%253E%253Crect%2520width%253D%2522512%2522%2520height%253D%2522512%2522%2520fill%253D%2522%2523050505%2522%252F%253E%253Ccircle%2520cx%253D%2522256%2522%2520cy%253D%2522256%2522%2520r%253D%2522120%2522%2520fill%253D%2522%2523d4ff00%2522%252F%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" />
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "SportsActivityLocation",
+  "name": "Yurgo Night Running",
+  "description": "Night-running комьюнити Ташкента",
+  "address": {"@type":"PostalAddress","addressLocality":"Ташкент","addressCountry":"UZ"},
+  "url": "https://yurgo.uz"
+}
+</script>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+<!-- PRELOADER -->
+<div class="preloader" id="preloader">
+  <div class="pre-logo">
+    <div class="pre-dot"></div>
+    <div class="pre-name">YURGO</div>
+  </div>
+  <div class="pre-bar"><div class="pre-bar-fill"></div></div>
+  <div class="pre-status">INITIALIZING NIGHT PROTOCOL</div>
+</div>
+
+<!-- SCROLL PROGRESS -->
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- CUSTOM CURSOR -->
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+
+<!-- AMBIENT GLOW (follows mouse softly) -->
+<div class="ambient-glow" id="ambientGlow"></div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-content">
+    <button class="lightbox-close" id="lightboxClose" aria-label="Close">×</button>
+    <div id="lightboxBody"></div>
+    <div class="lightbox-caption" id="lightboxCaption"></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">
+    <span class="logo-dot"></span>
+    <span>YURGO</span>
+  </div>
+  <div class="nav-mid">
+    <div class="nav-links">
+      <a href="#about" data-i18n="nav.about">Что входит</a>
+      <a href="#map" data-i18n="nav.map">Маршруты</a>
+      <a href="#rating" data-i18n="nav.rating">Рейтинг</a>
+      <a href="#gallery" data-i18n="nav.gallery">Галерея</a>
+      <a href="#faq" data-i18n="nav.faq">FAQ</a>
+    </div>
+    <div class="lang-switch">
+      <button data-lang="ru" class="active">RU</button>
+      <button data-lang="uz">UZ</button>
+      <button data-lang="en">EN</button>
+    </div>
+  </div>
+  <a href="#register" class="nav-cta" data-i18n="nav.cta">Записаться</a>
+  <button class="burger" id="burger" aria-label="Меню">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- MOBILE DRAWER -->
+<div class="mobile-drawer" id="mobileDrawer">
+  <button class="drawer-close" id="drawerClose" aria-label="Закрыть">×</button>
+  <div class="drawer-content">
+    <a href="#about" class="drawer-link">Что входит</a>
+    <a href="#map" class="drawer-link">Маршруты</a>
+    <a href="#rating" class="drawer-link">Рейтинг</a>
+    <a href="#gallery" class="drawer-link">Галерея</a>
+    <a href="#faq" class="drawer-link">FAQ</a>
+    <div class="drawer-lang">
+      <button data-lang="ru" class="active">RU</button>
+      <button data-lang="uz">UZ</button>
+      <button data-lang="en">EN</button>
+    </div>
+    <a href="#register" class="drawer-cta">Записаться · 15 000 сум</a>
+  </div>
+</div>
+<div class="drawer-backdrop" id="drawerBackdrop"></div>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-content">
+    <div class="hero-left">
+      <div class="hero-tag" data-i18n="hero.tag">● LIVE / Ташкент / следующий забег</div>
+
+      <h1 class="hero-title">
+        <span class="word" data-i18n="hero.title1">Беги</span>
+        <span class="word acid" data-i18n="hero.title2">когда</span>
+        <span class="word" data-i18n="hero.title3">город спит</span>
+      </h1>
+
+      <p class="hero-sub" data-i18n="hero.sub">
+        Yurgo — закрытое night-running комьюнити Ташкента. Огни, пустые улицы, темп твоего сердца. Один забег — и обычная пробежка больше не вернётся.
+      </p>
+
+      <!-- COUNTDOWN -->
+      <div class="countdown" id="countdown">
+        <div class="cd-box"><div class="cd-num" id="cd-d">00</div><div class="cd-label" data-i18n="cd.days">Дней</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-h">00</div><div class="cd-label" data-i18n="cd.hours">Часов</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-m">00</div><div class="cd-label" data-i18n="cd.min">Минут</div></div>
+        <div class="cd-box"><div class="cd-num" id="cd-s">00</div><div class="cd-label" data-i18n="cd.sec">Секунд</div></div>
+      </div>
+
+      <div class="hero-cta-row">
+        <a href="#register" class="btn-primary">
+          <span data-i18n="hero.btn">Записаться · 15 000 сум</span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#map" class="btn-ghost" data-i18n="hero.btn2">Смотреть маршруты</a>
+      </div>
+    </div>
+
+    <div class="hero-visual" id="heroVisual">
+      <!-- Photo layer — замени URL ниже на свою фотку или оставь fallback -->
+      <div class="hv-photo" id="hvPhoto"></div>
+
+      <!-- Atmospheric fallback (показывается если фото нет) -->
+      <div class="hv-fallback" id="hvFallback">
+        <svg class="hv-fallback-svg" viewBox="0 0 700 800" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="fb-moon" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0" stop-color="#fff8e0" stop-opacity="0.4"/>
+              <stop offset="0.5" stop-color="#ffce8a" stop-opacity="0.12"/>
+              <stop offset="1" stop-color="#ff9d3d" stop-opacity="0"/>
+            </radialGradient>
+            <radialGradient id="fb-moon-body" cx="0.35" cy="0.35" r="0.7">
+              <stop offset="0" stop-color="#ffffff"/>
+              <stop offset="0.6" stop-color="#e8e4d0"/>
+              <stop offset="1" stop-color="#7a7468"/>
+            </radialGradient>
+            <linearGradient id="fb-road" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#0a0a14" stop-opacity="0"/>
+              <stop offset="1" stop-color="#0a0a14" stop-opacity="1"/>
+            </linearGradient>
+          </defs>
+
+          <!-- Stars -->
+          <g fill="#f5f5f0">
+            <circle cx="80" cy="60" r="1.2" opacity="0.7"/>
+            <circle cx="180" cy="100" r="1" opacity="0.5"/>
+            <circle cx="260" cy="50" r="1.5" opacity="0.8"/>
+            <circle cx="370" cy="120" r="1" opacity="0.4"/>
+            <circle cx="440" cy="80" r="1.2" opacity="0.6"/>
+            <circle cx="600" cy="160" r="1.5" opacity="0.7"/>
+            <circle cx="120" cy="180" r="1" opacity="0.5"/>
+            <circle cx="540" cy="60" r="1" opacity="0.6"/>
+          </g>
+
+          <!-- Moon -->
+          <circle cx="540" cy="160" r="160" fill="url(#fb-moon)"/>
+          <circle cx="540" cy="160" r="42" fill="url(#fb-moon-body)"/>
+          <circle cx="528" cy="150" r="3" fill="#7a7468" opacity="0.5"/>
+          <circle cx="552" cy="168" r="4" fill="#7a7468" opacity="0.4"/>
+
+          <!-- City silhouette -->
+          <g opacity="0.85">
+            <rect x="0" y="380" width="40" height="120" fill="#0a0d14"/>
+            <rect x="40" y="360" width="55" height="140" fill="#0a0d14"/>
+            <rect x="95" y="390" width="40" height="110" fill="#0a0d14"/>
+            <rect x="135" y="340" width="65" height="160" fill="#0a0d14"/>
+            <rect x="200" y="370" width="50" height="130" fill="#0a0d14"/>
+            <rect x="250" y="350" width="70" height="150" fill="#0a0d14"/>
+            <rect x="320" y="380" width="50" height="120" fill="#0a0d14"/>
+            <rect x="370" y="330" width="60" height="170" fill="#0a0d14"/>
+            <rect x="430" y="365" width="55" height="135" fill="#0a0d14"/>
+            <rect x="485" y="385" width="50" height="115" fill="#0a0d14"/>
+            <rect x="535" y="355" width="65" height="145" fill="#0a0d14"/>
+            <rect x="600" y="375" width="50" height="125" fill="#0a0d14"/>
+            <rect x="650" y="345" width="50" height="155" fill="#0a0d14"/>
+          </g>
+
+          <!-- Sodium windows -->
+          <g fill="#ff9d3d" opacity="0.7">
+            <rect x="10" y="400" width="2" height="2"/><rect x="20" y="420" width="2" height="2"/>
+            <rect x="50" y="380" width="2" height="2"/><rect x="65" y="410" width="2" height="2"/>
+            <rect x="80" y="440" width="2" height="2"/><rect x="105" y="410" width="2" height="2"/>
+            <rect x="120" y="440" width="2" height="2"/><rect x="145" y="360" width="2" height="2"/>
+            <rect x="160" y="390" width="2" height="2"/><rect x="175" y="420" width="2" height="2"/>
+            <rect x="190" y="450" width="2" height="2"/><rect x="210" y="400" width="2" height="2"/>
+            <rect x="225" y="430" width="2" height="2"/><rect x="260" y="370" width="2" height="2"/>
+            <rect x="275" y="400" width="2" height="2"/><rect x="295" y="430" width="2" height="2"/>
+            <rect x="305" y="460" width="2" height="2"/><rect x="330" y="400" width="2" height="2"/>
+            <rect x="345" y="430" width="2" height="2"/><rect x="380" y="350" width="2" height="2"/>
+            <rect x="395" y="380" width="2" height="2"/><rect x="410" y="410" width="2" height="2"/>
+            <rect x="440" y="385" width="2" height="2"/><rect x="460" y="420" width="2" height="2"/>
+            <rect x="475" y="450" width="2" height="2"/><rect x="495" y="405" width="2" height="2"/>
+            <rect x="510" y="440" width="2" height="2"/><rect x="545" y="375" width="2" height="2"/>
+            <rect x="560" y="410" width="2" height="2"/><rect x="580" y="440" width="2" height="2"/>
+            <rect x="610" y="395" width="2" height="2"/><rect x="625" y="430" width="2" height="2"/>
+            <rect x="655" y="365" width="2" height="2"/><rect x="675" y="400" width="2" height="2"/>
+            <rect x="685" y="430" width="2" height="2"/>
+          </g>
+          <g fill="#d4ff00" opacity="0.6">
+            <rect x="30" y="450" width="2" height="2"/><rect x="155" y="430" width="2" height="2"/>
+            <rect x="240" y="450" width="2" height="2"/><rect x="340" y="470" width="2" height="2"/>
+            <rect x="400" y="470" width="2" height="2"/><rect x="500" y="470" width="2" height="2"/>
+            <rect x="620" y="465" width="2" height="2"/>
+          </g>
+
+          <!-- Road plane -->
+          <rect x="0" y="500" width="700" height="300" fill="url(#fb-road)"/>
+          <rect x="0" y="600" width="700" height="200" fill="#080812"/>
+
+          <!-- Road perspective lines — vanishing point -->
+          <line x1="350" y1="600" x2="50" y2="800" stroke="rgba(212,255,0,0.3)" stroke-width="1"/>
+          <line x1="350" y1="600" x2="650" y2="800" stroke="rgba(212,255,0,0.3)" stroke-width="1"/>
+
+          <!-- Center dashed line going into distance -->
+          <line x1="350" y1="600" x2="350" y2="800"
+            stroke="#d4ff00" stroke-width="6" stroke-dasharray="30 25" opacity="0.65"
+            style="filter:drop-shadow(0 0 8px #d4ff00);">
+            <animate attributeName="stroke-dashoffset" from="0" to="-55" dur="0.5s" repeatCount="indefinite"/>
+          </line>
+
+          <!-- Glow on horizon -->
+          <ellipse cx="350" cy="600" rx="300" ry="20" fill="#d4ff00" opacity="0.12" filter="blur(20px)"/>
+        </svg>
+      </div>
+
+      <!-- HUD overlay -->
+      <div class="hud-c tl">YURGO / 01</div>
+      <div class="hud-c tr"><span class="rec">REC</span><br>21:47:32</div>
+      <div class="hud-c bl">PACE.5'12"/KM</div>
+      <div class="hud-c br">NIGHT.PROTOCOL.TASHKENT</div>
+
+      <div class="hv-corner tl"></div><div class="hv-corner tr"></div>
+      <div class="hv-corner bl"></div><div class="hv-corner br"></div>
+
+      <div class="hv-scan"></div>
+
+      <!-- Runner ID -->
+      <div class="runner-id-badge">
+        <span class="id-num">#2046</span>
+        <span class="id-label">YURGO-CITIZEN</span>
+      </div>
+
+      <!-- Temperature top-left -->
+      <div class="hud-temp">
+        <span class="t-big">+24°</span>
+        <span class="t-label">TASHKENT.NIGHT</span>
+      </div>
+
+      <!-- Compass top-right -->
+      <div class="hud-compass"><div class="compass-arrow"></div></div>
+
+      <!-- Heart rate -->
+      <div class="hud-panel hud-hr">
+        <span class="label">Heart rate</span>
+        <span class="value">162<span class="unit">BPM</span></span>
+        <svg class="hud-hr-ecg" viewBox="0 0 200 24" preserveAspectRatio="none">
+          <path class="ecg-path" d="M 0 12 L 20 12 L 24 12 L 28 4 L 32 20 L 36 12 L 60 12 L 64 12 L 68 4 L 72 20 L 76 12 L 100 12 L 104 12 L 108 4 L 112 20 L 116 12 L 140 12 L 144 12 L 148 4 L 152 20 L 156 12 L 200 12"/>
+        </svg>
+      </div>
+
+      <!-- Pace -->
+      <div class="hud-panel hud-pace">
+        <span class="label">Pace</span>
+        <span class="value">5'12"<span class="unit">/KM</span></span>
+        <div class="pace-ticks">
+          <span></span><span></span><span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <!-- Distance bottom-left -->
+      <div class="hud-distance">
+        <span class="d-big">7.8</span><span class="d-unit">KM</span>
+        <span class="d-label">Distance</span>
+      </div>
+
+      <!-- Progress ring bottom-right -->
+      <div class="hud-progress">
+        <svg viewBox="0 0 64 64">
+          <circle class="ring-bg" cx="32" cy="32" r="27"/>
+          <circle class="ring-fill" cx="32" cy="32" r="27"
+            stroke-dasharray="170" stroke-dashoffset="37" transform="rotate(-90 32 32)"/>
+        </svg>
+        <span class="pct">78%</span>
+        <span class="pct-sub">DAY GOAL</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SLOTS BAR -->
+<div class="slots-bar">
+  <div class="slots-content">
+    <div class="slots-info">
+      <div class="slots-pulse"></div>
+      <div class="slots-text">
+        <span data-i18n="slots.next">Ближайший забег</span> — <strong>14 МАЯ · 21:00</strong>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;align-items:center;gap:8px;">
+      <div class="slots-bar-track"><div class="slots-bar-fill" id="slotsBar"></div></div>
+      <div class="slots-text"><span data-i18n="slots.taken">Занято</span> <strong><span id="slotsCount">44</span> / 60</strong></div>
+    </div>
+    <a href="#register" class="slots-cta">
+      <span data-i18n="slots.cta">Успеть записаться</span>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<!-- MARQUEE -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span class="marquee-item">NIGHT RUN TASHKENT</span>
+    <span class="marquee-item">КАЖДУЮ СРЕДУ 21:00</span>
+    <span class="marquee-item">5 KM · 10 KM · 15 KM</span>
+    <span class="marquee-item">YURGO COMMUNITY</span>
+    <span class="marquee-item">RUN. BREATHE. REPEAT.</span>
+    <span class="marquee-item">NIGHT RUN TASHKENT</span>
+    <span class="marquee-item">КАЖДУЮ СРЕДУ 21:00</span>
+    <span class="marquee-item">5 KM · 10 KM · 15 KM</span>
+    <span class="marquee-item">YURGO COMMUNITY</span>
+    <span class="marquee-item">RUN. BREATHE. REPEAT.</span>
+  </div>
+</div>
+
+<!-- INCLUDES -->
+<section class="section-pad includes" id="about">
+  <div class="container">
+
+    <div class="price-banner">
+      <div>
+        <div class="price-tag-label" data-i18n="price.label">Стоимость участия</div>
+        <div class="price-tag">15 000<span class="currency">сум</span></div>
+      </div>
+      <div class="price-divider"></div>
+      <div class="price-right">
+        <div class="price-right-label" data-i18n="price.sublabel">Один забег · полный пакет</div>
+        <div class="price-right-text" data-i18n="price.subtext">Комплимент от Yurgo, вода и вклад в благотворительность</div>
+      </div>
+    </div>
+
+    <div class="section-head" style="margin-bottom:0;border-top:none;">
+      <div>
+        <div class="section-num">/ 01 — ЧТО ВХОДИТ</div>
+        <h2 class="section-title" data-i18n="inc.title">Что ты получаешь</h2>
+      </div>
+      <p class="section-desc" data-i18n="inc.desc">
+        Регистрация — это не просто билет на пробежку. Это поддержка комьюнити, забота о тебе на дистанции и реальная помощь тем, кому она нужна.
+      </p>
+    </div>
+
+    <div class="includes-grid">
+      <div class="include-card">
+        <div class="include-num">01</div>
+        <div class="include-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 17l-6.5 4 2-7.5L2 9h7z"/></svg></div>
+        <h3 class="include-title" data-i18n="inc.1.title">Комплимент от Yurgo</h3>
+        <p class="include-desc" data-i18n="inc.1.desc">Приятный подарок от организаторов каждому участнику забега — мерч, аксессуар или сюрприз вечера.</p>
+        <span class="include-highlight" data-i18n="inc.1.tag">Включено</span>
+      </div>
+
+      <div class="include-card">
+        <div class="include-num">02</div>
+        <div class="include-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2c-3 5-6 8-6 12a6 6 0 0012 0c0-4-3-7-6-12z"/></svg></div>
+        <h3 class="include-title" data-i18n="inc.2.title">Вода 0.5 л</h3>
+        <p class="include-desc" data-i18n="inc.2.desc">Бутылка чистой воды 0.5 л на финише, чтобы восстановиться сразу после дистанции.</p>
+        <span class="include-highlight" data-i18n="inc.2.tag">Финиш-зона</span>
+      </div>
+
+      <div class="include-card">
+        <div class="include-num">03</div>
+        <div class="include-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 21s-7-5-7-12a5 5 0 0110-1 5 5 0 0110 1c0 7-7 12-7 12z" transform="translate(-2.5 0)"/><path d="M16 9l2 2 4-4"/></svg></div>
+        <h3 class="include-title" data-i18n="inc.3.title">10 000 сум — благотворительность</h3>
+        <p class="include-desc" data-i18n="inc.3.desc">Из каждой регистрации <strong style="color:var(--ink);">10 000 сум</strong> уходит в благотворительный фонд. Отчёты публикуем в Telegram.</p>
+        <span class="include-highlight">66% от взноса</span>
+      </div>
+    </div>
+
+    <!-- CHARITY REPORT -->
+    <div class="charity-report" id="charity">
+      <div class="charity-report-head">
+        <h3>Прозрачный <span class="acid">отчёт</span> по благотворительности</h3>
+        <span class="charity-badge">● live · обновлено сегодня</span>
+      </div>
+
+      <div class="charity-stats">
+        <div class="charity-stat">
+          <div class="charity-stat-num">4.8<span class="small"> млн</span></div>
+          <div class="charity-stat-label">Собрано в 2025</div>
+        </div>
+        <div class="charity-stat">
+          <div class="charity-stat-num">320</div>
+          <div class="charity-stat-label">Регистраций</div>
+        </div>
+        <div class="charity-stat">
+          <div class="charity-stat-num">7</div>
+          <div class="charity-stat-label">Фондов поддержали</div>
+        </div>
+        <div class="charity-stat">
+          <div class="charity-stat-num">100<span class="small">%</span></div>
+          <div class="charity-stat-label">Переводов с пруфами</div>
+        </div>
+      </div>
+
+      <div class="charity-timeline">
+        <div class="timeline-row">
+          <div class="timeline-date">15.04.2026</div>
+          <div class="timeline-event">Перевод в фонд «Ezgu Amal»<small>Поддержка детских отделений в больницах</small></div>
+          <div class="timeline-amount">780 000 сум</div>
+          <a href="#" class="timeline-link">скрин →</a>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-date">28.03.2026</div>
+          <div class="timeline-event">Покупка обуви детскому дому №3<small>Спортивные кроссовки для секции лёгкой атлетики</small></div>
+          <div class="timeline-amount">620 000 сум</div>
+          <a href="#" class="timeline-link">скрин →</a>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-date">12.03.2026</div>
+          <div class="timeline-event">Фонд «Мехр-Шафкат»<small>Помощь семьям с тяжелобольными детьми</small></div>
+          <div class="timeline-amount">540 000 сум</div>
+          <a href="#" class="timeline-link">скрин →</a>
+        </div>
+        <div class="timeline-row">
+          <div class="timeline-date">19.02.2026</div>
+          <div class="timeline-event">Зимний сбор: тёплая одежда<small>200+ семей в холодном Самарканде</small></div>
+          <div class="timeline-amount">890 000 сум</div>
+          <a href="#" class="timeline-link">скрин →</a>
+        </div>
+      </div>
+
+      <div style="margin-top:30px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+        <p style="color:var(--ink-dim);font-size:13px;line-height:1.6;max-width:600px;">
+          Все переводы публикуем со скринами в нашем Telegram-канале. Ни сум не остаётся «в воздухе».
+        </p>
+        <a href="https://t.me/yurgo" class="btn-ghost" style="padding:12px 24px;font-size:12px;">Telegram-канал →</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- MAP === -->
+<section class="section-pad map-section" id="map">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-num">/ 02 — МАРШРУТЫ ПО ТАШКЕНТУ</div>
+        <h2 class="section-title">Карта забегов</h2>
+      </div>
+      <p class="section-desc">
+        Каждый ивент — новый маршрут. Кликни на точку, чтобы увидеть детали: дистанцию, темп и где стартуем.
+      </p>
+    </div>
+
+    <div class="map-wrap">
+      <div class="map-svg-wrap">
+        <svg class="map-svg" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <radialGradient id="mapGlow" cx="0.5" cy="0.5" r="0.5">
+              <stop offset="0%" stop-color="#d4ff00" stop-opacity="0.15"/>
+              <stop offset="100%" stop-color="#d4ff00" stop-opacity="0"/>
+            </radialGradient>
+          </defs>
+
+          <!-- City glow zones -->
+          <circle cx="400" cy="300" r="250" fill="url(#mapGlow)"/>
+
+          <!-- Districts (abstract Tashkent shape) -->
+          <g fill="#0f1820" stroke="rgba(212,255,0,0.15)" stroke-width="0.5">
+            <path d="M 200 180 L 350 150 L 480 170 L 560 220 L 590 320 L 540 420 L 450 470 L 330 480 L 230 440 L 180 360 L 170 260 Z"/>
+            <path d="M 350 150 L 480 170 L 480 280 L 380 290 L 350 230 Z"/>
+            <path d="M 480 280 L 560 220 L 590 320 L 540 350 L 480 340 Z"/>
+            <path d="M 480 340 L 540 350 L 540 420 L 460 450 L 430 380 Z"/>
+            <path d="M 230 440 L 330 480 L 450 470 L 460 450 L 430 380 L 350 360 L 280 380 Z"/>
+            <path d="M 180 360 L 230 440 L 280 380 L 250 290 L 200 320 Z"/>
+            <path d="M 200 180 L 350 150 L 350 230 L 250 290 L 200 320 L 170 260 Z"/>
+          </g>
+
+          <!-- Rivers / lines -->
+          <path d="M 100 200 Q 250 250 380 290 T 700 380" stroke="rgba(70,130,180,0.3)" stroke-width="2" fill="none"/>
+
+          <!-- District labels -->
+          <g font-family="JetBrains Mono, monospace" font-size="9" fill="#5a6570" letter-spacing="1">
+            <text x="280" y="200">YUNUSABAD</text>
+            <text x="410" y="220">MIRABAD</text>
+            <text x="500" y="290">SHAYKHANTAUR</text>
+            <text x="320" y="430">CHILANZAR</text>
+            <text x="480" y="400">YAKKASARAY</text>
+            <text x="220" y="380">UCHTEPA</text>
+          </g>
+
+          <!-- ROUTE 1 - Yunusabad loop (5km) - hidden by default, shown via JS -->
+          <g class="route route-1">
+            <path class="route-line" d="M 290 240 Q 330 200 370 220 Q 400 250 380 290 Q 340 310 300 280 Z" stroke="#d4ff00" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+
+          <!-- ROUTE 2 - Mirabad to Broadway (10km) -->
+          <g class="route route-2" style="display:none;">
+            <path class="route-line" d="M 380 230 L 450 250 L 490 300 L 470 380 L 410 410 L 360 380 L 340 320 L 350 270 Z" stroke="#ff2d2d" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+
+          <!-- ROUTE 3 - Long city (15km) -->
+          <g class="route route-3" style="display:none;">
+            <path class="route-line" d="M 250 270 L 350 200 L 460 230 L 520 310 L 500 410 L 400 460 L 280 430 L 220 360 Z" stroke="#d4ff00" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+
+          <!-- ROUTE 4 - Center loop -->
+          <g class="route route-4" style="display:none;">
+            <path class="route-line" d="M 400 290 L 450 280 L 480 320 L 460 360 L 410 370 L 380 340 Z" stroke="#d4ff00" stroke-width="3" fill="none" stroke-linecap="round"/>
+          </g>
+
+          <!-- PINS -->
+          <g class="map-pin" data-route="1" transform="translate(290,240)">
+            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
+            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
+            <circle cx="0" cy="0" r="4" fill="#050505"/>
+            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">01</text>
+          </g>
+
+          <g class="map-pin" data-route="2" transform="translate(380,230)">
+            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
+            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
+            <circle cx="0" cy="0" r="4" fill="#050505"/>
+            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">02</text>
+          </g>
+
+          <g class="map-pin" data-route="3" transform="translate(250,270)">
+            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
+            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
+            <circle cx="0" cy="0" r="4" fill="#050505"/>
+            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">03</text>
+          </g>
+
+          <g class="map-pin" data-route="4" transform="translate(400,290)">
+            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
+            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
+            <circle cx="0" cy="0" r="4" fill="#050505"/>
+            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">04</text>
+          </g>
+
+          <!-- compass -->
+          <g transform="translate(720,60)" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">
+            <circle cx="0" cy="0" r="28" fill="none" stroke="rgba(212,255,0,0.4)"/>
+            <path d="M 0 -22 L 4 0 L 0 22 L -4 0 Z" fill="#d4ff00"/>
+            <text x="-3" y="-32">N</text>
+          </g>
+        </svg>
+      </div>
+
+      <div class="map-sidebar">
+        <h4>Ближайшие маршруты</h4>
+        <p>Кликни маршрут — увидишь его трассу на карте.</p>
+
+        <div class="route-item active" data-route="1">
+          <div class="route-name">Юнусабад · Парк Магистр</div>
+          <div class="route-meta"><span class="acid">5 км</span><span>EASY</span><span>21:00</span><span>14 МАЯ</span></div>
+          <div class="route-desc">Лёгкий маршрут по освещённому парку. Идеально для первого ночного забега.</div>
+        </div>
+        <div class="route-item" data-route="2">
+          <div class="route-name">Мирабад → Бродвей</div>
+          <div class="route-meta"><span class="acid">10 км</span><span style="color:var(--crimson);">HOT</span><span>22:00</span><span>17 МАЯ</span></div>
+          <div class="route-desc">Городской ритм. Неон, пустые улицы центра, фотогеничные точки.</div>
+        </div>
+        <div class="route-item" data-route="3">
+          <div class="route-name">Большая петля Ташкента</div>
+          <div class="route-meta"><span class="acid">15 км</span><span>PRO</span><span>21:00</span><span>21 МАЯ</span></div>
+          <div class="route-desc">Тяжёлый рельеф, для подготовленных. С машиной сопровождения.</div>
+        </div>
+        <div class="route-item" data-route="4">
+          <div class="route-name">Центр · Mustaqillik</div>
+          <div class="route-meta"><span class="acid">5 км</span><span>EASY</span><span>22:00</span><span>24 МАЯ</span></div>
+          <div class="route-desc">Memorial → Hilton. Лучшие точки города для пост-забеговых фото.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RATING -->
+<section class="section-pad" id="rating" style="background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-num">/ 03 — РЕЙТИНГ КОМЬЮНИТИ</div>
+        <h2 class="section-title">Общий зачёт</h2>
+      </div>
+      <p class="section-desc">
+        Кликни на бегуна, чтобы увидеть его профиль: историю забегов, бейджи и достижения сезона.
+      </p>
+    </div>
+
+    <div class="rating-wrap">
+      <div class="rating-podium">
+        <div class="podium-spot silver" data-user="aziz">
+          <div class="podium-avatar">A</div>
+          <div class="podium-name">Aziz K.</div>
+          <div class="podium-km">142 KM</div>
+          <div class="podium-bar">02</div>
+        </div>
+        <div class="podium-spot gold" data-user="rustam">
+          <div class="podium-avatar">R</div>
+          <div class="podium-name">Rustam M.</div>
+          <div class="podium-km">168 KM</div>
+          <div class="podium-bar">01</div>
+        </div>
+        <div class="podium-spot bronze" data-user="diyora">
+          <div class="podium-avatar">D</div>
+          <div class="podium-name">Diyora S.</div>
+          <div class="podium-km">128 KM</div>
+          <div class="podium-bar">03</div>
+        </div>
+      </div>
+
+      <div class="leaderboard">
+        <div class="lb-head">
+          <div>#</div><div>Бегун</div><div style="text-align:right;">Забегов</div>
+          <div style="text-align:right;">Темп</div><div style="text-align:right;">Бейджи</div><div style="text-align:right;">КМ</div>
+        </div>
+        <div class="lb-row top-3" data-user="rustam"><div class="lb-rank">01</div><div class="lb-name"><div class="lb-avatar">R</div>Rustam M.</div><div class="lb-stat">14</div><div class="lb-stat">4'48"</div><div class="lb-stat"><div class="lb-badges"><span>★</span><span>♦</span><span>●</span></div></div><div class="lb-stat km">168</div></div>
+        <div class="lb-row top-3" data-user="aziz"><div class="lb-rank">02</div><div class="lb-name"><div class="lb-avatar">A</div>Aziz K.</div><div class="lb-stat">12</div><div class="lb-stat">5'02"</div><div class="lb-stat"><div class="lb-badges"><span>★</span><span>♦</span></div></div><div class="lb-stat km">142</div></div>
+        <div class="lb-row top-3" data-user="diyora"><div class="lb-rank">03</div><div class="lb-name"><div class="lb-avatar">D</div>Diyora S.</div><div class="lb-stat">11</div><div class="lb-stat">5'14"</div><div class="lb-stat"><div class="lb-badges"><span>★</span><span>●</span></div></div><div class="lb-stat km">128</div></div>
+        <div class="lb-row" data-user="sardor"><div class="lb-rank">04</div><div class="lb-name"><div class="lb-avatar">S</div>Sardor B.</div><div class="lb-stat">10</div><div class="lb-stat">5'21"</div><div class="lb-stat"><div class="lb-badges"><span>★</span></div></div><div class="lb-stat km">112</div></div>
+        <div class="lb-row" data-user="madina"><div class="lb-rank">05</div><div class="lb-name"><div class="lb-avatar">M</div>Madina T.</div><div class="lb-stat">9</div><div class="lb-stat">5'33"</div><div class="lb-stat"><div class="lb-badges"><span>★</span></div></div><div class="lb-stat km">98</div></div>
+        <div class="lb-row" data-user="bekzod"><div class="lb-rank">06</div><div class="lb-name"><div class="lb-avatar">B</div>Bekzod U.</div><div class="lb-stat">8</div><div class="lb-stat">5'45"</div><div class="lb-stat"><div class="lb-badges"></div></div><div class="lb-stat km">87</div></div>
+        <div class="lb-row" data-user="nilufar"><div class="lb-rank">07</div><div class="lb-name"><div class="lb-avatar">N</div>Nilufar A.</div><div class="lb-stat">7</div><div class="lb-stat">5'52"</div><div class="lb-stat"><div class="lb-badges"></div></div><div class="lb-stat km">74</div></div>
+        <div class="lb-row" data-user="jasur"><div class="lb-rank">08</div><div class="lb-name"><div class="lb-avatar">J</div>Jasur R.</div><div class="lb-stat">6</div><div class="lb-stat">6'08"</div><div class="lb-stat"><div class="lb-badges"></div></div><div class="lb-stat km">62</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section class="section-pad testimonials">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-num">/ 04 — ОТЗЫВЫ КОМЬЮНИТИ</div>
+        <h2 class="section-title">Что говорят бегуны</h2>
+      </div>
+      <p class="section-desc">Реальные слова реальных людей, которые бегают с нами каждую среду.</p>
+    </div>
+
+    <div class="testi-grid">
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Пришла "просто посмотреть" — теперь бегаю каждую неделю. Атмосфера, музыка на старте, ребята из комьюнити — это что-то другое. И приятно знать, что 10к идут на доброе дело.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">M</div>
+          <div><div class="testi-name">Madina T.</div><div class="testi-meta">12 забегов · 98 км</div></div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Yurgo заменили мне зал. Бег ночью по пустому Ташкенту — лучшая медитация. Плюс прозрачность по благотворительности на высоте — каждый раз получаем отчёт в TG.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">R</div>
+          <div><div class="testi-name">Rustam M.</div><div class="testi-meta">14 забегов · 168 км</div></div>
+        </div>
+      </div>
+
+      <div class="testi-card">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-text">Был скептиком — записался один раз, поддался хайпу. Теперь не пропускаю. Маршруты разные, темп подстраиваем под группу, организация на уровне. Респект ребятам.</p>
+        <div class="testi-author">
+          <div class="testi-avatar">S</div>
+          <div><div class="testi-name">Sardor B.</div><div class="testi-meta">10 забегов · 112 км</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+<section class="section-pad" id="gallery">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-num">/ 05 — С ПОСЛЕДНИХ ЗАБЕГОВ</div>
+        <h2 class="section-title">Атмосфера</h2>
+      </div>
+      <p class="section-desc">Кадры с ночных забегов по Ташкенту. Больше — в нашем Instagram и Telegram.</p>
+    </div>
+
+    <div class="gallery-grid">
+      <!-- 8 stylized SVG cards as photo placeholders -->
+      <div class="gallery-item tall">
+        <svg viewBox="0 0 200 400" preserveAspectRatio="xMidYMid slice">
+          <defs><linearGradient id="g1" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0a14"/><stop offset="1" stop-color="#050505"/></linearGradient></defs>
+          <rect width="200" height="400" fill="url(#g1)"/>
+          <circle cx="160" cy="80" r="40" fill="#d4ff00" opacity="0.15"/>
+          <circle cx="160" cy="80" r="14" fill="#f5f5f0" opacity="0.7"/>
+          <g fill="#0a1218"><rect x="0" y="280" width="40" height="120"/><rect x="40" y="240" width="30" height="160"/><rect x="70" y="270" width="50" height="130"/><rect x="120" y="220" width="40" height="180"/><rect x="160" y="260" width="40" height="140"/></g>
+          <g fill="#d4ff00" opacity="0.5"><rect x="10" y="310" width="2" height="2"/><rect x="50" y="280" width="2" height="2"/><rect x="80" y="300" width="2" height="2"/><rect x="135" y="260" width="2" height="2"/><rect x="180" y="290" width="2" height="2"/></g>
+          <g transform="translate(80,200)"><ellipse cx="10" cy="-10" rx="6" ry="8" fill="#f5f5f0"/><path d="M 8 -2 L 4 20 L 16 20 L 12 -2 Z" fill="#f5f5f0"/></g>
+        </svg>
+        <div class="gallery-label">14.04 · ЮНУСАБАД 5К</div>
+      </div>
+
+      <div class="gallery-item">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+          <rect width="200" height="200" fill="#0a0a14"/>
+          <path d="M 0 100 L 200 80" stroke="#d4ff00" stroke-width="1" opacity="0.4"/>
+          <path d="M 0 130 L 200 110" stroke="#d4ff00" stroke-width="1" opacity="0.4"/>
+          <circle cx="100" cy="100" r="30" fill="#d4ff00" opacity="0.15"/>
+          <g transform="translate(85,80)"><ellipse cx="15" cy="-5" rx="8" ry="10" fill="#f5f5f0"/><path d="M 12 5 L 8 35 L 22 35 L 18 5 Z" fill="#f5f5f0"/></g>
+          <text x="10" y="190" font-family="JetBrains Mono" font-size="8" fill="#d4ff00">PACE 5'12"</text>
+        </svg>
+        <div class="gallery-label">17.04 · МИРАБАД</div>
+      </div>
+
+      <div class="gallery-item wide">
+        <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+          <defs><linearGradient id="g2" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#050505"/><stop offset="0.5" stop-color="#1a0a0a"/><stop offset="1" stop-color="#050505"/></linearGradient></defs>
+          <rect width="400" height="200" fill="url(#g2)"/>
+          <g fill="#0a1218"><rect x="0" y="140" width="60" height="60"/><rect x="60" y="120" width="50" height="80"/><rect x="110" y="100" width="80" height="100"/><rect x="190" y="130" width="60" height="70"/><rect x="250" y="110" width="70" height="90"/><rect x="320" y="140" width="80" height="60"/></g>
+          <g fill="#d4ff00" opacity="0.7"><rect x="20" y="160" width="2" height="2"/><rect x="75" y="140" width="2" height="2"/><rect x="130" y="120" width="2" height="2"/><rect x="160" y="150" width="2" height="2"/><rect x="210" y="150" width="2" height="2"/><rect x="270" y="130" width="2" height="2"/><rect x="290" y="160" width="2" height="2"/><rect x="350" y="160" width="2" height="2"/></g>
+          <g transform="translate(180,140)"><ellipse cx="0" cy="-5" rx="5" ry="7" fill="#f5f5f0"/><path d="M -2 0 L -5 25 L 5 25 L 2 0 Z" fill="#f5f5f0"/></g>
+          <g transform="translate(220,142)"><ellipse cx="0" cy="-5" rx="5" ry="7" fill="#f5f5f0"/><path d="M -2 0 L -5 25 L 5 25 L 2 0 Z" fill="#f5f5f0"/></g>
+          <g transform="translate(260,140)"><ellipse cx="0" cy="-5" rx="5" ry="7" fill="#f5f5f0"/><path d="M -2 0 L -5 25 L 5 25 L 2 0 Z" fill="#f5f5f0"/></g>
+        </svg>
+        <div class="gallery-label">21.04 · БОЛЬШАЯ ПЕТЛЯ 15К</div>
+      </div>
+
+      <div class="gallery-item">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+          <rect width="200" height="200" fill="#0f0a14"/>
+          <circle cx="100" cy="100" r="60" fill="none" stroke="#d4ff00" stroke-width="1" opacity="0.3"/>
+          <circle cx="100" cy="100" r="40" fill="none" stroke="#d4ff00" stroke-width="1" opacity="0.5"/>
+          <circle cx="100" cy="100" r="20" fill="#d4ff00" opacity="0.2"/>
+          <text x="100" y="105" text-anchor="middle" font-family="Bebas Neue" font-size="28" fill="#d4ff00">10K</text>
+        </svg>
+        <div class="gallery-label">ФИНИШ · 51'42"</div>
+      </div>
+
+      <div class="gallery-item">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+          <rect width="200" height="200" fill="#050505"/>
+          <g stroke="#d4ff00" stroke-width="1" fill="none" opacity="0.4"><path d="M 0 50 L 200 50"/><path d="M 0 100 L 200 100"/><path d="M 0 150 L 200 150"/></g>
+          <g transform="translate(40,80)"><circle cx="0" cy="0" r="20" fill="#d4ff00"/><text x="0" y="6" text-anchor="middle" font-family="Bebas Neue" font-size="24" fill="#000">R</text></g>
+          <g transform="translate(100,80)"><circle cx="0" cy="0" r="20" fill="#d4ff00"/><text x="0" y="6" text-anchor="middle" font-family="Bebas Neue" font-size="24" fill="#000">A</text></g>
+          <g transform="translate(160,80)"><circle cx="0" cy="0" r="20" fill="#d4ff00"/><text x="0" y="6" text-anchor="middle" font-family="Bebas Neue" font-size="24" fill="#000">D</text></g>
+          <text x="100" y="160" text-anchor="middle" font-family="Bebas Neue" font-size="20" fill="#f5f5f0">TOP-3 СЕЗОНА</text>
+        </svg>
+        <div class="gallery-label">ПОДИУМ · АПРЕЛЬ</div>
+      </div>
+
+      <div class="gallery-item">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+          <rect width="200" height="200" fill="#0a0510"/>
+          <g fill="#d4ff00" opacity="0.6">
+            <rect x="20" y="20" width="3" height="3"/><rect x="60" y="40" width="3" height="3"/><rect x="100" y="30" width="3" height="3"/><rect x="140" y="50" width="3" height="3"/><rect x="170" y="20" width="3" height="3"/>
+            <rect x="30" y="80" width="3" height="3"/><rect x="80" y="90" width="3" height="3"/><rect x="120" y="80" width="3" height="3"/><rect x="160" y="90" width="3" height="3"/>
+          </g>
+          <g fill="#0a1218"><rect x="0" y="120" width="200" height="80"/></g>
+          <g transform="translate(50,120)"><ellipse cx="0" cy="-5" rx="7" ry="9" fill="#f5f5f0"/><path d="M -3 2 L -7 30 L 7 30 L 3 2 Z" fill="#f5f5f0"/></g>
+          <g transform="translate(100,120)"><ellipse cx="0" cy="-5" rx="7" ry="9" fill="#f5f5f0"/><path d="M -3 2 L -7 30 L 7 30 L 3 2 Z" fill="#f5f5f0"/></g>
+          <g transform="translate(150,120)"><ellipse cx="0" cy="-5" rx="7" ry="9" fill="#f5f5f0"/><path d="M -3 2 L -7 30 L 7 30 L 3 2 Z" fill="#f5f5f0"/></g>
+        </svg>
+        <div class="gallery-label">СТАРТ · 21:00</div>
+      </div>
+
+      <div class="gallery-item">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+          <rect width="200" height="200" fill="#0a0a14"/>
+          <path d="M 20 100 Q 100 60 180 100 T 350 100" stroke="#d4ff00" stroke-width="3" fill="none" opacity="0.7"/>
+          <circle cx="20" cy="100" r="8" fill="#d4ff00"/>
+          <circle cx="180" cy="100" r="8" fill="#ff2d2d"/>
+          <text x="20" y="130" font-family="JetBrains Mono" font-size="9" fill="#d4ff00">START</text>
+          <text x="160" y="130" font-family="JetBrains Mono" font-size="9" fill="#ff2d2d">FINISH</text>
+          <text x="100" y="50" text-anchor="middle" font-family="Bebas Neue" font-size="20" fill="#f5f5f0">5.2 KM</text>
+        </svg>
+        <div class="gallery-label">МАРШРУТ · ТРЕК</div>
+      </div>
+
+      <div class="gallery-item">
+        <svg viewBox="0 0 200 200" preserveAspectRatio="xMidYMid slice">
+          <rect width="200" height="200" fill="#050505"/>
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.8"/>
+          <text x="100" y="95" text-anchor="middle" font-family="Bebas Neue" font-size="32" fill="#d4ff00">240+</text>
+          <text x="100" y="115" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="#f5f5f0">RUNNERS</text>
+          <text x="100" y="180" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#8a8a85">COMMUNITY</text>
+        </svg>
+        <div class="gallery-label">КОМЬЮНИТИ</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- REGISTRATION -->
+<section class="section-pad register" id="register">
+  <div class="container">
+    <div class="section-head" style="text-align:center;justify-items:center;grid-template-columns:1fr;">
+      <div>
+        <div class="section-num">/ 06 — РЕГИСТРАЦИЯ</div>
+        <h2 class="section-title">Готов бежать?</h2>
+      </div>
+    </div>
+
+    <div class="register-card">
+      <div class="register-corners"><div class="tl"></div><div class="tr"></div><div class="bl"></div><div class="br"></div></div>
+      <h2>15 000 <span>сум</span></h2>
+      <p>Жми кнопку — наш телеграм-бот примет оплату и пришлёт билет с QR-кодом. Без сложных форм. Без банковских танцев.</p>
+
+      <div class="register-steps">
+        <div class="step"><div class="step-num">01</div><div class="step-text">Открой бота в Telegram</div></div>
+        <div class="step"><div class="step-num">02</div><div class="step-text">Оплати 15 000 сум прямо в чате</div></div>
+        <div class="step"><div class="step-num">03</div><div class="step-text">Получи билет и приходи бежать</div></div>
+      </div>
+
+      <a href="https://t.me/yurgo_bot" class="btn-huge" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5l-3 17c-.2 1-.8 1.2-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.7L17.7 7c.4-.3-.1-.5-.6-.2L7.3 13l-4.2-1.3c-.9-.3-.9-.9.2-1.3l16.5-6.4c.8-.3 1.4.2 1.7 1z"/></svg>
+        Записаться через Telegram
+      </a>
+
+      <p style="margin-top:30px;font-size:13px;color:var(--ink-mute);">Принимаем Click, Payme, Uzcard, Humo. Возврат — не позднее 24 ч до старта.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section-pad" id="faq" style="background:var(--bg-2);border-top:1px solid var(--line);">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="section-num">/ 07 — ВОПРОСЫ</div>
+        <h2 class="section-title">Часто спрашивают</h2>
+      </div>
+    </div>
+
+    <div class="faq-list">
+      <div class="faq-item"><div class="faq-q">А я смогу пробежать, если я новичок?</div><div class="faq-a">Конечно. У нас есть маршруты на 5 км с лёгким темпом — это посильно почти для всех. На старте мы делимся на группы по pace, никто не останется один.</div></div>
+      <div class="faq-item"><div class="faq-q">Что входит в 15 000 сум?</div><div class="faq-a">Участие в забеге, бутылка воды 0.5 л на финише, комплимент от Yurgo (мерч/сюрприз), и 10 000 сум из этой суммы уходят на благотворительность.</div></div>
+      <div class="faq-item"><div class="faq-q">Как именно расходуется благотворительная часть?</div><div class="faq-a">После каждого ивента мы собираем все 10-тысячные взносы и направляем их в проверенный фонд. Список фондов и отчёты о переводах публикуем в нашем телеграм-канале — со скринами и суммами.</div></div>
+      <div class="faq-item"><div class="faq-q">Безопасно ли бегать ночью по Ташкенту?</div><div class="faq-a">Да. Мы выбираем освещённые маршруты, бежим группой, в начале и в конце — пейс-мейкеры. На ивенте есть машина сопровождения и аптечка.</div></div>
+      <div class="faq-item"><div class="faq-q">Что если я не смогу прийти?</div><div class="faq-a">Если предупредить за 24 часа до старта — вернём деньги или перенесём на следующий забег. Позже — взнос остаётся в благотворительном фонде.</div></div>
+      <div class="faq-item"><div class="faq-q">Как считается рейтинг и бейджи?</div><div class="faq-a">Каждый километр на наших ивентах прибавляется к твоему счёту. Бейджи открываются за достижения: 10 км / 50 км / 100 км, "Первый ночной", "Полумарафон под луной" и т.д. Топ-10 сезона получают призы.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div>
+      <div class="footer-brand">YUR<span class="acid">GO</span></div>
+      <p class="footer-tag">Night-running комьюнити Ташкента. Беги по освещённому городу, копи километры, помогай другим. Каждую среду и субботу.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Навигация</h5>
+      <a href="#about">Что входит</a><a href="#map">Маршруты</a><a href="#rating">Рейтинг</a><a href="#charity">Благотворительность</a><a href="#register">Регистрация</a>
+    </div>
+    <div class="footer-col">
+      <h5>Контакты</h5>
+      <a href="https://t.me/yurgo">Telegram-канал</a><a href="https://t.me/yurgo_bot">Бот регистрации</a><a href="https://instagram.com/yurgo">Instagram</a><a href="mailto:run@yurgo.uz">run@yurgo.uz</a>
+    </div>
+    <div class="footer-col">
+      <h5>Город</h5>
+      <a>Ташкент, UZ</a><a>Стартовая точка — в боте</a><a>Поддержка 24/7</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span>© 2026 YURGO · Run the Night</span>
+    <span>Made with ● in Tashkent</span>
+  </div>
+</footer>
+
+<!-- MOBILE STICKY CTA -->
+<div class="mobile-cta">
+  <a href="#register">
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M21.5 4.5l-3 17c-.2 1-.8 1.2-1.7.8l-4.6-3.4-2.2 2.1c-.3.3-.5.5-1 .5l.3-4.7L17.7 7c.4-.3-.1-.5-.6-.2L7.3 13l-4.2-1.3c-.9-.3-.9-.9.2-1.3l16.5-6.4c.8-.3 1.4.2 1.7 1z"/></svg>
+    Записаться · 15 000 сум
+  </a>
+</div>
+
+<!-- PROFILE MODAL -->
+<div class="modal-backdrop" id="modal">
+  <div class="modal">
+    <div class="modal-corners"><div class="tl"></div><div class="tr"></div><div class="bl"></div><div class="br"></div></div>
+    <button class="modal-close" id="modalClose">×</button>
+
+    <div class="modal-head">
+      <div class="modal-avatar" id="m-avatar">R</div>
+      <div>
+        <div class="modal-name" id="m-name">Rustam M.</div>
+        <div class="modal-rank" id="m-rank">● RANK 01 · GOLD TIER</div>
+      </div>
+    </div>
+
+    <div class="modal-stats">
+      <div><div class="modal-stat-num" id="m-km">168</div><div class="modal-stat-label">КМ всего</div></div>
+      <div><div class="modal-stat-num" id="m-runs">14</div><div class="modal-stat-label">Забегов</div></div>
+      <div><div class="modal-stat-num" id="m-pace">4'48"</div><div class="modal-stat-label">Средний темп</div></div>
+    </div>
+
+    <div class="modal-section">
+      <h5>Бейджи и достижения</h5>
+      <div class="badges-grid" id="m-badges">
+        <div class="badge earned"><div class="badge-icon">🌙</div><div class="badge-name">Первый ночной</div></div>
+        <div class="badge earned"><div class="badge-icon">⭐</div><div class="badge-name">10 КМ</div></div>
+        <div class="badge earned"><div class="badge-icon">💎</div><div class="badge-name">50 КМ</div></div>
+        <div class="badge earned"><div class="badge-icon">🔥</div><div class="badge-name">100 КМ</div></div>
+        <div class="badge earned"><div class="badge-icon">🏆</div><div class="badge-name">Подиум</div></div>
+        <div class="badge earned"><div class="badge-icon">⚡</div><div class="badge-name">Sub-5 pace</div></div>
+        <div class="badge"><div class="badge-icon">🌟</div><div class="badge-name">200 КМ</div></div>
+        <div class="badge"><div class="badge-icon">👑</div><div class="badge-name">Король сезона</div></div>
+      </div>
+    </div>
+
+    <div class="modal-section">
+      <h5>История забегов</h5>
+      <div class="run-history" id="m-history">
+        <div class="run-row"><div class="run-date">07.05.2026</div><div>Юнусабад · Парк Магистр</div><div class="run-km">5 км</div><div class="run-pace">4'52"</div></div>
+        <div class="run-row"><div class="run-date">04.05.2026</div><div>Мирабад → Бродвей</div><div class="run-km">10 км</div><div class="run-pace">5'01"</div></div>
+        <div class="run-row"><div class="run-date">30.04.2026</div><div>Большая петля Ташкента</div><div class="run-km">15 км</div><div class="run-pace">4'58"</div></div>
+        <div class="run-row"><div class="run-date">26.04.2026</div><div>Центр · Mustaqillik</div><div class="run-km">5 км</div><div class="run-pace">4'42"</div></div>
+        <div class="run-row"><div class="run-date">23.04.2026</div><div>Юнусабад · Парк Магистр</div><div class="run-km">5 км</div><div class="run-pace">4'47"</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="js/app.js" defer></script>
+
+</body>
+</html>
