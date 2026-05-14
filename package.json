@@ -1,0 +1,20 @@
+{
+  "name": "nightrun",
+  "private": true,
+  "version": "0.1.0",
+  "description": "YURGO — Night Running Tashkent landing page.",
+  "scripts": {
+    "format": "prettier --write \"**/*.{html,css,js,json,md}\"",
+    "format:check": "prettier --check \"**/*.{html,css,js,json,md}\"",
+    "lint:css": "stylelint \"**/*.css\"",
+    "validate": "html-validate index.html",
+    "check": "npm run format:check && npm run lint:css && npm run validate",
+    "serve": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "html-validate": "^9.0.0",
+    "prettier": "^3.2.0",
+    "stylelint": "^16.2.0",
+    "stylelint-config-standard": "^36.0.0"
+  }
+}

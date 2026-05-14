@@ -4,24 +4,29 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#050505" />
-<title>YURGO — Night Running Tashkent · Беги когда город спит</title>
+<title>YURGO — Night Running Tashkent</title>
 <meta name="description" content="Yurgo — закрытое night-running комьюнити Ташкента. Забеги каждую среду и субботу. 10 000 сум с каждой регистрации идут на благотворительность." />
+<link rel="canonical" href="./" />
+
+<!-- Icons -->
+<link rel="icon" type="image/svg+xml" href="favicon.svg" />
+<link rel="apple-touch-icon" href="apple-touch-icon.svg" />
 
 <!-- Open Graph -->
 <meta property="og:type" content="website" />
 <meta property="og:title" content="YURGO — Night Running Tashkent" />
 <meta property="og:description" content="Беги по ночному Ташкенту вместе с комьюнити. Каждый забег — поддержка благотворительности." />
-<meta property="og:url" content="https://yurgo.uz" />
-<meta property="og:image" content="https://yurgo.uz/og.jpg" />
+<meta property="og:image" content="og.jpg" />
 <meta property="og:locale" content="ru_RU" />
 
 <!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="YURGO — Night Running Tashkent" />
 <meta name="twitter:description" content="Закрытое night-running комьюнити Ташкента" />
+<meta name="twitter:image" content="og.jpg" />
 
 <!-- PWA -->
-<link rel="manifest" href="data:application/manifest+json,%7B%22name%22%3A%22YURGO%22%2C%22short_name%22%3A%22YURGO%22%2C%22start_url%22%3A%22%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23050505%22%2C%22theme_color%22%3A%22%23050505%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D%2522http%253A%252F%252Fwww.w3.org%252F2000%252Fsvg%2522%2520viewBox%253D%25220%25200%2520512%2520512%2522%253E%253Crect%2520width%253D%2522512%2522%2520height%253D%2522512%2522%2520fill%253D%2522%2523050505%2522%252F%253E%253Ccircle%2520cx%253D%2522256%2522%2520cy%253D%2522256%2522%2520r%253D%2522120%2522%2520fill%253D%2522%2523d4ff00%2522%252F%253E%253C%252Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D" />
+<link rel="manifest" href="manifest.webmanifest" />
 
 <!-- Structured Data -->
 <script type="application/ld+json">
@@ -31,13 +36,20 @@
   "name": "Yurgo Night Running",
   "description": "Night-running комьюнити Ташкента",
   "address": {"@type":"PostalAddress","addressLocality":"Ташкент","addressCountry":"UZ"},
-  "url": "https://yurgo.uz"
+  "geo": {"@type":"GeoCoordinates","latitude":41.3111,"longitude":69.2797},
+  "openingHoursSpecification": [
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Wednesday","opens":"21:00","closes":"23:00"},
+    {"@type":"OpeningHoursSpecification","dayOfWeek":"Saturday","opens":"21:00","closes":"23:00"}
+  ],
+  "sport": "Running"
 }
 </script>
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" /></noscript>
 
 <link rel="stylesheet" href="styles.css">
 </head>
@@ -86,14 +98,14 @@
       <a href="#gallery" data-i18n="nav.gallery">Галерея</a>
       <a href="#faq" data-i18n="nav.faq">FAQ</a>
     </div>
-    <div class="lang-switch">
-      <button data-lang="ru" class="active">RU</button>
-      <button data-lang="uz">UZ</button>
-      <button data-lang="en">EN</button>
+    <div class="lang-switch" role="group" aria-label="Язык / Language">
+      <button data-lang="ru" class="active" aria-pressed="true" aria-label="Русский">RU</button>
+      <button data-lang="uz" aria-pressed="false" aria-label="Oʻzbekcha">UZ</button>
+      <button data-lang="en" aria-pressed="false" aria-label="English">EN</button>
     </div>
   </div>
   <a href="#register" class="nav-cta" data-i18n="nav.cta">Записаться</a>
-  <button class="burger" id="burger" aria-label="Меню">
+  <button class="burger" id="burger" aria-label="Меню" aria-expanded="false" aria-controls="mobileDrawer">
     <span></span><span></span><span></span>
   </button>
 </nav>
@@ -131,10 +143,6 @@
         <span class="word acid" data-i18n="hero.title2">когда</span>
         <span class="word" data-i18n="hero.title3">город спит</span>
       </h1>
-
-      <p class="hero-sub" data-i18n="hero.sub">
-        Yurgo — закрытое night-running комьюнити Ташкента. Огни, пустые улицы, темп твоего сердца. Один забег — и обычная пробежка больше не вернётся.
-      </p>
 
       <!-- COUNTDOWN -->
       <div class="countdown" id="countdown">
@@ -382,7 +390,8 @@
         <h2 class="section-title" data-i18n="inc.title">Что ты получаешь</h2>
       </div>
       <p class="section-desc" data-i18n="inc.desc">
-        Регистрация — это не просто билет на пробежку. Это поддержка комьюнити, забота о тебе на дистанции и реальная помощь тем, кому она нужна.
+        — С каждой регистрацией мы делаем нечто большее, чем просто ран. Часть средств идёт на благотворительность.<br/>
+        — Ты не просто приходишь на пробежку — ты становишься частью комьюнити, которое помогает другим.
       </p>
     </div>
 
@@ -391,8 +400,7 @@
         <div class="include-num">01</div>
         <div class="include-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2l3 7h7l-5.5 4.5 2 7.5L12 17l-6.5 4 2-7.5L2 9h7z"/></svg></div>
         <h3 class="include-title" data-i18n="inc.1.title">Комплимент от Yurgo</h3>
-        <p class="include-desc" data-i18n="inc.1.desc">Приятный подарок от организаторов каждому участнику забега — мерч, аксессуар или сюрприз вечера.</p>
-        <span class="include-highlight" data-i18n="inc.1.tag">Включено</span>
+        <p class="include-desc" data-i18n="inc.1.desc">Приятный подарок от организаторов каждому участнику забега.</p>
       </div>
 
       <div class="include-card">
@@ -485,7 +493,7 @@
         <h2 class="section-title">Карта забегов</h2>
       </div>
       <p class="section-desc">
-        Каждый ивент — новый маршрут. Кликни на точку, чтобы увидеть детали: дистанцию, темп и где стартуем.
+        Маршруты следующих забегов появятся здесь ближе к ивенту.
       </p>
     </div>
 
@@ -526,55 +534,6 @@
             <text x="220" y="380">UCHTEPA</text>
           </g>
 
-          <!-- ROUTE 1 - Yunusabad loop (5km) - hidden by default, shown via JS -->
-          <g class="route route-1">
-            <path class="route-line" d="M 290 240 Q 330 200 370 220 Q 400 250 380 290 Q 340 310 300 280 Z" stroke="#d4ff00" stroke-width="3" fill="none" stroke-linecap="round"/>
-          </g>
-
-          <!-- ROUTE 2 - Mirabad to Broadway (10km) -->
-          <g class="route route-2" style="display:none;">
-            <path class="route-line" d="M 380 230 L 450 250 L 490 300 L 470 380 L 410 410 L 360 380 L 340 320 L 350 270 Z" stroke="#ff2d2d" stroke-width="3" fill="none" stroke-linecap="round"/>
-          </g>
-
-          <!-- ROUTE 3 - Long city (15km) -->
-          <g class="route route-3" style="display:none;">
-            <path class="route-line" d="M 250 270 L 350 200 L 460 230 L 520 310 L 500 410 L 400 460 L 280 430 L 220 360 Z" stroke="#d4ff00" stroke-width="3" fill="none" stroke-linecap="round"/>
-          </g>
-
-          <!-- ROUTE 4 - Center loop -->
-          <g class="route route-4" style="display:none;">
-            <path class="route-line" d="M 400 290 L 450 280 L 480 320 L 460 360 L 410 370 L 380 340 Z" stroke="#d4ff00" stroke-width="3" fill="none" stroke-linecap="round"/>
-          </g>
-
-          <!-- PINS -->
-          <g class="map-pin" data-route="1" transform="translate(290,240)">
-            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
-            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
-            <circle cx="0" cy="0" r="4" fill="#050505"/>
-            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">01</text>
-          </g>
-
-          <g class="map-pin" data-route="2" transform="translate(380,230)">
-            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
-            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
-            <circle cx="0" cy="0" r="4" fill="#050505"/>
-            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">02</text>
-          </g>
-
-          <g class="map-pin" data-route="3" transform="translate(250,270)">
-            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
-            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
-            <circle cx="0" cy="0" r="4" fill="#050505"/>
-            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">03</text>
-          </g>
-
-          <g class="map-pin" data-route="4" transform="translate(400,290)">
-            <circle class="outer" cx="0" cy="0" r="14" fill="none" stroke="#d4ff00" stroke-width="2" opacity="0.6"/>
-            <circle cx="0" cy="0" r="10" fill="#d4ff00"/>
-            <circle cx="0" cy="0" r="4" fill="#050505"/>
-            <text x="14" y="4" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">04</text>
-          </g>
-
           <!-- compass -->
           <g transform="translate(720,60)" font-family="JetBrains Mono, monospace" font-size="10" fill="#d4ff00">
             <circle cx="0" cy="0" r="28" fill="none" stroke="rgba(212,255,0,0.4)"/>
@@ -585,28 +544,9 @@
       </div>
 
       <div class="map-sidebar">
-        <h4>Ближайшие маршруты</h4>
-        <p>Кликни маршрут — увидишь его трассу на карте.</p>
-
-        <div class="route-item active" data-route="1">
-          <div class="route-name">Юнусабад · Парк Магистр</div>
-          <div class="route-meta"><span class="acid">5 км</span><span>EASY</span><span>21:00</span><span>14 МАЯ</span></div>
-          <div class="route-desc">Лёгкий маршрут по освещённому парку. Идеально для первого ночного забега.</div>
-        </div>
-        <div class="route-item" data-route="2">
-          <div class="route-name">Мирабад → Бродвей</div>
-          <div class="route-meta"><span class="acid">10 км</span><span style="color:var(--crimson);">HOT</span><span>22:00</span><span>17 МАЯ</span></div>
-          <div class="route-desc">Городской ритм. Неон, пустые улицы центра, фотогеничные точки.</div>
-        </div>
-        <div class="route-item" data-route="3">
-          <div class="route-name">Большая петля Ташкента</div>
-          <div class="route-meta"><span class="acid">15 км</span><span>PRO</span><span>21:00</span><span>21 МАЯ</span></div>
-          <div class="route-desc">Тяжёлый рельеф, для подготовленных. С машиной сопровождения.</div>
-        </div>
-        <div class="route-item" data-route="4">
-          <div class="route-name">Центр · Mustaqillik</div>
-          <div class="route-meta"><span class="acid">5 км</span><span>EASY</span><span>22:00</span><span>24 МАЯ</span></div>
-          <div class="route-desc">Memorial → Hilton. Лучшие точки города для пост-забеговых фото.</div>
+        <h4>Маршруты</h4>
+        <div class="route-item placeholder">
+          <div class="route-desc">Маршруты ближайших забегов опубликуем здесь. Следи за нашим Telegram-каналом.</div>
         </div>
       </div>
     </div>
@@ -866,10 +806,10 @@
     </div>
 
     <div class="faq-list">
-      <div class="faq-item"><div class="faq-q">А я смогу пробежать, если я новичок?</div><div class="faq-a">Конечно. У нас есть маршруты на 5 км с лёгким темпом — это посильно почти для всех. На старте мы делимся на группы по pace, никто не останется один.</div></div>
-      <div class="faq-item"><div class="faq-q">Что входит в 15 000 сум?</div><div class="faq-a">Участие в забеге, бутылка воды 0.5 л на финише, комплимент от Yurgo (мерч/сюрприз), и 10 000 сум из этой суммы уходят на благотворительность.</div></div>
-      <div class="faq-item"><div class="faq-q">Как именно расходуется благотворительная часть?</div><div class="faq-a">После каждого ивента мы собираем все 10-тысячные взносы и направляем их в проверенный фонд. Список фондов и отчёты о переводах публикуем в нашем телеграм-канале — со скринами и суммами.</div></div>
-      <div class="faq-item"><div class="faq-q">Безопасно ли бегать ночью по Ташкенту?</div><div class="faq-a">Да. Мы выбираем освещённые маршруты, бежим группой, в начале и в конце — пейс-мейкеры. На ивенте есть машина сопровождения и аптечка.</div></div>
+      <div class="faq-item"><div class="faq-q">А я смогу пробежать, если я новичок?</div><div class="faq-a">Конечно. У нас есть маршруты на 3–5 км с лёгким темпом — это посильно почти для всех. На старте мы делимся на группы по pace, никто не останется один.</div></div>
+      <div class="faq-item"><div class="faq-q">Что входит в 15 000 сум?</div><div class="faq-a">Участие в забеге, бутылка воды 0.5 л на финише, комплимент от Yurgo, и 10 000 сум из этой суммы мы направляем в фонд Mehirli qollar.</div></div>
+      <div class="faq-item"><div class="faq-q">Как именно расходуется благотворительная часть?</div><div class="faq-a">После каждого ивента мы собираем все 10-тысячные взносы и направляем их только в фонд Mehirli qollar. Отчёты о переводах публикуем в нашем телеграм-канале — со скринами и суммами.</div></div>
+      <div class="faq-item"><div class="faq-q">Что получают активные участники YRC?</div><div class="faq-a">Каждый месяц участников, которые бегают с нами чаще всех, будут ждать особенные подарки от Yurgo.</div></div>
       <div class="faq-item"><div class="faq-q">Что если я не смогу прийти?</div><div class="faq-a">Если предупредить за 24 часа до старта — вернём деньги или перенесём на следующий забег. Позже — взнос остаётся в благотворительном фонде.</div></div>
       <div class="faq-item"><div class="faq-q">Как считается рейтинг и бейджи?</div><div class="faq-a">Каждый километр на наших ивентах прибавляется к твоему счёту. Бейджи открываются за достижения: 10 км / 50 км / 100 км, "Первый ночной", "Полумарафон под луной" и т.д. Топ-10 сезона получают призы.</div></div>
     </div>
@@ -881,7 +821,7 @@
   <div class="footer-grid">
     <div>
       <div class="footer-brand">YUR<span class="acid">GO</span></div>
-      <p class="footer-tag">Night-running комьюнити Ташкента. Беги по освещённому городу, копи километры, помогай другим. Каждую среду и субботу.</p>
+      <p class="footer-tag">YRC — комьюнити пробежек в Ташкенте.<br/>Больше, чем просто бег: атмосфера, люди и доброе дело.<br/>Каждую среду.</p>
     </div>
     <div class="footer-col">
       <h5>Навигация</h5>
