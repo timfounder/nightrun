@@ -5,6 +5,7 @@
     "no-trailing-whitespace": "off",
     "no-inline-style": "off",
     "no-redundant-role": "off",
+    "no-implicit-button-type": "off",
     "wcag/h32": "off"
   }
 }
